@@ -37,13 +37,14 @@ For each column the following statistics - if relevant for the column type - are
 
 ## Announcements
 
-### Version v2.9.0 released
+### Version v2.10.0rc1 released
 
-The release candidate for v2.9.0 was already out for a while, now v2.9.0 is finally released. See the changelog below to know what has changed.
+v2.10.0rc1 includes a major overhaul of the type system, now fully reliant on visions.
+See the changelog below to know what has changed.
 
 ### Spark backend in progress
 
-We can happily announce that we're working on a Spark backend for generating profile reports.
+We can happily announce that we're nearing v1 for the Spark backend for generating profile reports.
 Stay tuned.
 
 ### Support `pandas-profiling`
@@ -54,10 +55,10 @@ It's extra exciting that GitHub **matches your contribution** for the first year
 
 Find more information here:
 
- - [Changelog v2.9.0](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/changelog.html#changelog-v2-9-0)
+ - [Changelog v2.10.0rc1](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/changelog.html#changelog-v2-10-0rc1)
  - [Sponsor the project on GitHub](https://github.com/sponsors/sbrugman)
 
-_September 2, 2020 💘_
+_January 5, 2021 💘_
 
 ---
 
@@ -81,6 +82,8 @@ The following examples can give you an impression of what the package can do:
 * [Stata Auto](https://pandas-profiling.github.io/pandas-profiling/examples/master/stata_auto/stata_auto_report.html) (1978 Automobile data)
 * [Vektis](https://pandas-profiling.github.io/pandas-profiling/examples/master/vektis/vektis_report.html) (Vektis Dutch Healthcare data)
 * [Colors](https://pandas-profiling.github.io/pandas-profiling/examples/master/colors/colors_report.html) (a simple colors dataset)
+* [UCI Bank Dataset](https://pandas-profiling.github.io/pandas-profiling/examples/master/cbank_marketing_data/uci_bank_marketing_report.html) (banking marketing dataset)
+
 
 Specific features:
 
@@ -250,7 +253,7 @@ profile.to_file("output.html")
 
 ## Supporting open source
 
-Maintaining and developing the open-source code for pandas-profiling, with millions of downloads and thousands of users, would not be possible with support of our gracious sponsors.
+Maintaining and developing the open-source code for pandas-profiling, with millions of downloads and thousands of users, would not be possible without support of our gracious sponsors.
 
 <table>
 <tr>
