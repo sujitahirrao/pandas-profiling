@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/">Documentation</a>
   |
-  <a href="https://join.slack.com/t/pandas-profiling/shared_invite/zt-j619lvar-dgU_GA3zlhB1vNqJvbg8yg">Slack</a>
+  <a href="https://join.slack.com/t/pandas-profiling/shared_invite/zt-l2iqwb92-9JpTEdFBijR2G798j2MpQw">Slack</a>
   | 
   <a href="https://stackoverflow.com/questions/tagged/pandas-profiling">Stack Overflow</a>
 </p>
@@ -37,35 +37,32 @@ For each column the following statistics - if relevant for the column type - are
 
 ## Announcements
 
-### Version v2.9.0 released
+**Version v2.11.0 released** featuring an exciting integration with Great Expectations that many of you requested (see details below).
 
-The release candidate for v2.9.0 was already out for a while, now v2.9.0 is finally released. See the changelog below to know what has changed.
-
-### Spark backend in progress
-
-We can happily announce that we're working on a Spark backend for generating profile reports.
+**Spark backend in progress**: We can happily announce that we're nearing v1 for the Spark backend for generating profile reports.
 Stay tuned.
 
 ### Support `pandas-profiling`
 
 The development of `pandas-profiling` relies completely on contributions.
-If you find value in the package, we welcome you to support the project through [GitHub Sponsors](https://github.com/sponsors/sbrugman)!
+If you find value in the package, we welcome you to support the project directly through [GitHub Sponsors](https://github.com/sponsors/sbrugman)!
+Please help me to continue to support this package.
 It's extra exciting that GitHub **matches your contribution** for the first year.
 
 Find more information here:
 
- - [Changelog v2.9.0](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/changelog.html#changelog-v2-9-0)
+ - [Changelog v2.11.0](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/changelog.html#changelog-v2-11-0)
  - [Sponsor the project on GitHub](https://github.com/sponsors/sbrugman)
 
-_September 2, 2020 💘_
+_February 20, 2021 💘_
 
 ---
 
 _Contents:_ **[Examples](#examples)** |
 **[Installation](#installation)** | **[Documentation](#documentation)** |
 **[Large datasets](#large-datasets)** | **[Command line usage](#command-line-usage)** |
-**[Advanced usage](#advanced-usage)** | **[Support](#supporting-open-source)** |
-**[Types](#types)** | **[How to contribute](#contributing)** |
+**[Advanced usage](#advanced-usage)** | **[integrations](#integrations)** |
+**[Support](#supporting-open-source)** | **[Types](#types)** | **[How to contribute](#contributing)** |
 **[Editor Integration](#editor-integration)** | **[Dependencies](#dependencies)**
 
 ---
@@ -81,6 +78,8 @@ The following examples can give you an impression of what the package can do:
 * [Stata Auto](https://pandas-profiling.github.io/pandas-profiling/examples/master/stata_auto/stata_auto_report.html) (1978 Automobile data)
 * [Vektis](https://pandas-profiling.github.io/pandas-profiling/examples/master/vektis/vektis_report.html) (Vektis Dutch Healthcare data)
 * [Colors](https://pandas-profiling.github.io/pandas-profiling/examples/master/colors/colors_report.html) (a simple colors dataset)
+* [UCI Bank Dataset](https://pandas-profiling.github.io/pandas-profiling/examples/master/cbank_marketing_data/uci_bank_marketing_report.html) (banking marketing dataset)
+
 
 Specific features:
 
@@ -238,19 +237,46 @@ A set of options is available in order to adapt the report generated.
 * `title` (`str`): Title for the report ('Pandas Profiling Report' by default).
 * `pool_size` (`int`): Number of workers in thread pool. When set to zero, it is set to the number of CPUs available (0 by default).
 * `progress_bar` (`bool`): If True, `pandas-profiling` will display a progress bar.
+* `infer_dtypes` (`bool`): When `True` (default) the `dtype` of variables are inferred using `visions` using the typeset logic (for instance a column that has integers stored as string will be analyzed as if being numeric).
 
 More settings can be found in the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml), [minimal configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_minimal.yaml) and [dark themed configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_dark.yaml).
 
-**Example**
+You find the configuration docs on the advanced usage page [here](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/advanced_usage.html)
 
+**Example**
 ```python
 profile = df.profile_report(title='Pandas Profiling Report', plot={'histogram': {'bins': 8}})
 profile.to_file("output.html")
 ```
 
+## Integrations
+
+### Great Expectations
+
+<table>
+<tr>
+<td>
+
+<img alt="Great Expectations" src="https://github.com/great-expectations/great_expectations/raw/develop/generic_dickens_protagonist.png" width="900" />
+
+</td>
+<td>
+
+Profiling your data is closely related to data validation: often validation rules are defined in terms of well-known statistics.
+For that purpose, `pandas-profiling` integrates with [Great Expectations](https://www.greatexpectations.io). 
+This a world-class open-source library that helps you to maintain data quality and improve communication about data between teams.
+Great Expectations allows you to create Expectations (which are basically unit tests for your data) and Data Docs (conveniently shareable HTML data reports).
+`pandas-profiling` features a method to create a suite of Expectations based on the results of your ProfileReport, which you can store, and use to validate another (or future) dataset.
+
+You can find more details on the Great Expectations integration [here](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/great_expectations_integration.html)
+
+</td>
+</tr>
+</table>
+
 ## Supporting open source
 
-Maintaining and developing the open-source code for pandas-profiling, with millions of downloads and thousands of users, would not be possible with support of our gracious sponsors.
+Maintaining and developing the open-source code for pandas-profiling, with millions of downloads and thousands of users, would not be possible without support of our gracious sponsors.
 
 <table>
 <tr>
@@ -269,7 +295,7 @@ Maintaining and developing the open-source code for pandas-profiling, with milli
 
 We would like to thank our generous Github Sponsors supporters who make pandas-profiling possible: 
 
-    Martin Sotir, Joseph Yuen, Brian Lee, Stephanie Rivera, nscsekhar, abdulAziz
+    Martin Sotir, Brian Lee, Stephanie Rivera, abdulAziz, gramster
 
 More info if you would like to appear here: [Github Sponsor page](https://github.com/sponsors/sbrugman)
 
@@ -277,7 +303,7 @@ More info if you would like to appear here: [Github Sponsor page](https://github
 ## Types
 
 Types are a powerful abstraction for effective data analysis, that goes beyond the logical data types (integer, float etc.).
-`pandas-profiling` currently recognizes the following types: _Boolean, Numerical, Date, Categorical, URL, Path, File_ and _Image_.
+`pandas-profiling` currently, recognizes the following types: _Boolean, Numerical, Date, Categorical, URL, Path, File_ and _Image_.
 
 We have developed a type system for Python, tailored for data analysis: [visions](https://github.com/dylan-profiler/visions).
 Selecting the right typeset drastically reduces the complexity the code of your analysis.
