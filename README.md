@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/">Documentation</a>
   |
-  <a href="https://join.slack.com/t/pandas-profiling/shared_invite/zt-l2iqwb92-9JpTEdFBijR2G798j2MpQw">Slack</a>
+  <a href="https://join.slack.com/t/pandas-profiling/shared_invite/zt-oe5ol4yc-YtbOxNBGUCb~v73TamRLuA">Slack</a>
   | 
   <a href="https://stackoverflow.com/questions/tagged/pandas-profiling">Stack Overflow</a>
 </p>
@@ -239,7 +239,7 @@ A set of options is available in order to adapt the report generated.
 * `progress_bar` (`bool`): If True, `pandas-profiling` will display a progress bar.
 * `infer_dtypes` (`bool`): When `True` (default) the `dtype` of variables are inferred using `visions` using the typeset logic (for instance a column that has integers stored as string will be analyzed as if being numeric).
 
-More settings can be found in the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml), [minimal configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_minimal.yaml) and [dark themed configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_dark.yaml).
+More settings can be found in the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml) and [minimal configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_minimal.yaml).
 
 You find the configuration docs on the advanced usage page [here](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/advanced_usage.html)
 
@@ -314,7 +314,7 @@ In the meantime, user customized summarizations and type definitions are now ful
 
 Read on getting involved in the [Contribution Guide](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/contribution_guidelines.html).
 
-A low threshold place to ask questions or start contributing is by reaching out on the pandas-profiling Slack. [Join the Slack community](https://join.slack.com/t/pandas-profiling/shared_invite/zt-hfy3iwp2-qEJSItye5QBZf8YGFMaMnQ).
+A low threshold place to ask questions or start contributing is by reaching out on the pandas-profiling Slack. [Join the Slack community](https://join.slack.com/t/pandas-profiling/shared_invite/zt-oe5ol4yc-YtbOxNBGUCb~v73TamRLuA).
 
 ## Editor integration
 
