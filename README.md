@@ -211,7 +211,7 @@ profile.to_file("your_report.json")
 
 Version 2.4 introduces minimal mode. 
 
-This is a default configuration that disables expensive computations (such as correlations and dynamic binning).
+This is a default configuration that disables expensive computations (such as correlations and duplicate row detection).
 
 Use the following syntax:
 
@@ -219,6 +219,8 @@ Use the following syntax:
 profile = ProfileReport(large_dataset, minimal=True)
 profile.to_file("output.html")
 ```
+
+Benchmarks are available [here](https://pandas-profiling.github.io/pandas-profiling/dev/bench/).
 
 ### Command line usage
 

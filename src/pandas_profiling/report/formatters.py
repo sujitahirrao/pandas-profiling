@@ -78,7 +78,7 @@ def fmt_timespan(num_seconds, detailed=False, max_units=3):
     import math
     import numbers
     import re
-    from datetime import datetime, timedelta
+    from datetime import timedelta
 
     time_units = (
         dict(
@@ -257,6 +257,21 @@ def fmt(value) -> str:
         return str(escape(value))
 
 
+def fmt_monotonic(value: int) -> str:
+    if value == 2:
+        return "Strictly increasing"
+    elif value == 1:
+        return "Increasing"
+    elif value == 0:
+        return "Not monotonic"
+    elif value == -1:
+        return "Decreasing"
+    elif value == -2:
+        return "Strictly decreasing"
+    else:
+        raise ValueError("Value should be integer ranging from -2 to 2.")
+
+
 def help(title, url=None) -> str:
     """Creat help badge
 
@@ -283,6 +298,7 @@ def get_fmt_mapping() -> Dict[str, Callable]:
         "fmt_bytesize": fmt_bytesize,
         "fmt_timespan": fmt_timespan,
         "fmt_numeric": fmt_numeric,
+        "fmt_monotonic": fmt_monotonic,
         "fmt_number": fmt_number,
         "fmt_array": fmt_array,
         "fmt": fmt,
