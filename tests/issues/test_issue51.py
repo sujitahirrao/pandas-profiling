@@ -5,7 +5,7 @@ https://github.com/pandas-profiling/pandas-profiling/issues/51
 import numpy as np
 import pandas as pd
 
-import pandas_profiling
+from pandas_profiling import ProfileReport
 
 
 def test_issue51(get_data_file):
@@ -17,8 +17,8 @@ def test_issue51(get_data_file):
 
     df = pd.read_pickle(str(file_name))
 
-    report = df.profile_report(
-        title="Pandas Profiling Report", progress_bar=False, explorative=True
+    report = ProfileReport(
+        df, title="Pandas Profiling Report", progress_bar=False, explorative=True
     )
     assert (
         "<title>Pandas Profiling Report</title>" in report.to_html()
@@ -34,12 +34,11 @@ def test_issue51_similar():
         }
     )
 
-    report = df.profile_report(
-        title="Pandas Profiling Report", progress_bar=False, explorative=True
+    report = ProfileReport(
+        df, title="Pandas Profiling Report", progress_bar=False, explorative=True
     )
-    report.set_variable("vars.num.low_categorical_threshold", 0)
-    # FIXME: assert correlation values
-    # print(report.get_description()["correlations"])
+    report.config.vars.num.low_categorical_threshold = 0
+    # FIXME: assert correlation values (report.description_set["correlations"])
 
     assert (
         "<title>Pandas Profiling Report</title>" in report.to_html()
@@ -55,12 +54,13 @@ def test_issue51_empty():
         }
     )
 
-    report = df.profile_report(
+    report = ProfileReport(
+        df,
         title="Pandas Profiling Report",
         progress_bar=False,
         explorative=True,
     )
-    report.set_variable("vars.num.low_categorical_threshold", 0)
+    report.config.vars.num.low_categorical_threshold = 0
 
     assert (
         "cramers" not in report.get_description()["correlations"]
@@ -80,10 +80,10 @@ def test_issue51_identical():
         }
     )
 
-    report = df.profile_report(
-        title="Pandas Profiling Report", progress_bar=False, explorative=True
+    report = ProfileReport(
+        df, title="Pandas Profiling Report", progress_bar=False, explorative=True
     )
-    report.set_variable("vars.num.low_categorical_threshold", 0)
+    report.config.vars.num.low_categorical_threshold = 0
 
     assert (
         report.get_description()["correlations"]["cramers"].values == np.ones((3, 3))
