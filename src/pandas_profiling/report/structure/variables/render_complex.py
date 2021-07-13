@@ -15,7 +15,7 @@ from pandas_profiling.report.presentation.core import (
 from pandas_profiling.visualisation.plot import scatter_complex
 
 
-def render_complex(config: Settings, summary: dict):
+def render_complex(config: Settings, summary: dict) -> dict:
     varid = summary["varid"]
     template_variables = {}
     image_format = config.plot.image_format
@@ -25,7 +25,7 @@ def render_complex(config: Settings, summary: dict):
         summary["varid"],
         summary["varname"],
         "Complex number (&Copf;)",
-        summary["warnings"],
+        summary["alerts"],
         summary["description"],
     )
 

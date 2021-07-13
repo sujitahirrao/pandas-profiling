@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from pandas_profiling.config import Settings
 from pandas_profiling.report.formatters import (
@@ -23,37 +23,32 @@ from pandas_profiling.report.structure.variables.render_common import render_com
 from pandas_profiling.visualisation.plot import histogram, pie_plot
 
 
-def render_categorical_frequency(config: Settings, summary, varid):
+def render_categorical_frequency(
+    config: Settings, summary: dict, varid: str
+) -> Renderable:
     frequency_table = Table(
         [
             {
                 "name": "Unique",
                 "value": f"{summary['n_unique']} {help('The number of unique values (all values that occur exactly once in the dataset).')}",
-                "alert": "n_unique" in summary["warn_fields"],
+                "alert": "n_unique" in summary["alert_fields"],
             },
             {
                 "name": "Unique (%)",
                 "value": fmt_percent(summary["p_unique"]),
-                "alert": "p_unique" in summary["warn_fields"],
+                "alert": "p_unique" in summary["alert_fields"],
             },
         ],
         name="Unique",
         anchor_id=f"{varid}_unique_stats",
     )
 
-    frequencies = Image(
-        histogram(config, *summary["histogram_frequencies"]),
-        image_format=config.plot.image_format,
-        alt="frequencies histogram",
-        name="Frequencies histogram",
-        caption="Frequencies of value counts",
-        anchor_id=f"{varid}frequencies",
-    )
-
-    return frequency_table, frequencies
+    return frequency_table
 
 
-def render_categorical_length(config, summary, varid):
+def render_categorical_length(
+    config: Settings, summary: dict, varid: str
+) -> Tuple[Renderable, Renderable]:
     length_table = Table(
         [
             {
@@ -95,7 +90,9 @@ def render_categorical_length(config, summary, varid):
     return length_table, length_histo
 
 
-def render_categorical_unicode(config: Settings, summary, varid):
+def render_categorical_unicode(
+    config: Settings, summary: dict, varid: str
+) -> Tuple[Renderable, Renderable]:
     n_freq_table_max = config.n_freq_table_max
 
     category_overview = FrequencyTable(
@@ -253,7 +250,7 @@ def render_categorical_unicode(config: Settings, summary, varid):
                 FrequencyTable(
                     freq_table(
                         freqtable=summary["character_counts"],
-                        n=summary["character_counts"].sum(),
+                        n=summary["n_characters"],
                         max_number_to_print=n_freq_table_max,
                     ),
                     name="Most occurring characters",
@@ -293,7 +290,7 @@ def render_categorical_unicode(config: Settings, summary, varid):
     )
 
 
-def render_categorical(config: Settings, summary: dict):
+def render_categorical(config: Settings, summary: dict) -> dict:
     varid = summary["varid"]
     n_obs_cat = config.vars.cat.n_obs
     image_format = config.plot.image_format
@@ -307,7 +304,7 @@ def render_categorical(config: Settings, summary: dict):
         summary["varid"],
         summary["varname"],
         "Categorical",
-        summary["warnings"],
+        summary["alerts"],
         summary["description"],
     )
 
@@ -316,22 +313,22 @@ def render_categorical(config: Settings, summary: dict):
             {
                 "name": "Distinct",
                 "value": fmt(summary["n_distinct"]),
-                "alert": "n_distinct" in summary["warn_fields"],
+                "alert": "n_distinct" in summary["alert_fields"],
             },
             {
                 "name": "Distinct (%)",
                 "value": fmt_percent(summary["p_distinct"]),
-                "alert": "p_distinct" in summary["warn_fields"],
+                "alert": "p_distinct" in summary["alert_fields"],
             },
             {
                 "name": "Missing",
                 "value": fmt(summary["n_missing"]),
-                "alert": "n_missing" in summary["warn_fields"],
+                "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
                 "value": fmt_percent(summary["p_missing"]),
-                "alert": "p_missing" in summary["warn_fields"],
+                "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",
@@ -361,7 +358,7 @@ def render_categorical(config: Settings, summary: dict):
         redact=config.vars.cat.redact,
     )
 
-    unique_stats, value_counts = render_categorical_frequency(config, summary, varid)
+    unique_stats = render_categorical_frequency(config, summary, varid)
 
     overview_items = []
 

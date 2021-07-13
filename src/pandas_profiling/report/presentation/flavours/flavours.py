@@ -1,9 +1,14 @@
-from typing import Dict, Type
+from typing import Callable, Dict, Type
 
+from pandas_profiling.report.presentation.core import Root
 from pandas_profiling.report.presentation.core.renderable import Renderable
 
 
-def apply_renderable_mapping(mapping, structure, flavour):
+def apply_renderable_mapping(
+    mapping: Dict[Type[Renderable], Type[Renderable]],
+    structure: Renderable,
+    flavour: Callable,
+) -> None:
     mapping[type(structure)].convert_to_class(structure, flavour)
 
 
@@ -15,6 +20,7 @@ def get_html_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
     """
     from pandas_profiling.report.presentation.core import (
         HTML,
+        Alerts,
         Collapse,
         Container,
         Duplicate,
@@ -27,10 +33,10 @@ def get_html_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
         ToggleButton,
         Variable,
         VariableInfo,
-        Warnings,
     )
     from pandas_profiling.report.presentation.flavours.html import (
         HTMLHTML,
+        HTMLAlerts,
         HTMLCollapse,
         HTMLContainer,
         HTMLDuplicate,
@@ -43,7 +49,6 @@ def get_html_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
         HTMLToggleButton,
         HTMLVariable,
         HTMLVariableInfo,
-        HTMLWarnings,
     )
 
     return {
@@ -56,7 +61,7 @@ def get_html_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
         Image: HTMLImage,
         FrequencyTable: HTMLFrequencyTable,
         FrequencyTableSmall: HTMLFrequencyTableSmall,
-        Warnings: HTMLWarnings,
+        Alerts: HTMLAlerts,
         Duplicate: HTMLDuplicate,
         Sample: HTMLSample,
         ToggleButton: HTMLToggleButton,
@@ -64,7 +69,7 @@ def get_html_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
     }
 
 
-def HTMLReport(structure: Renderable):
+def HTMLReport(structure: Root) -> Root:
     """Adds HTML flavour to Renderable
 
     Args:
@@ -81,6 +86,7 @@ def HTMLReport(structure: Renderable):
 def get_widget_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
     from pandas_profiling.report.presentation.core import (
         HTML,
+        Alerts,
         Collapse,
         Container,
         Duplicate,
@@ -93,9 +99,9 @@ def get_widget_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
         ToggleButton,
         Variable,
         VariableInfo,
-        Warnings,
     )
     from pandas_profiling.report.presentation.flavours.widget import (
+        WidgetAlerts,
         WidgetCollapse,
         WidgetContainer,
         WidgetDuplicate,
@@ -109,7 +115,6 @@ def get_widget_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
         WidgetToggleButton,
         WidgetVariable,
         WidgetVariableInfo,
-        WidgetWarnings,
     )
 
     return {
@@ -122,7 +127,7 @@ def get_widget_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
         Image: WidgetImage,
         FrequencyTable: WidgetFrequencyTable,
         FrequencyTableSmall: WidgetFrequencyTableSmall,
-        Warnings: WidgetWarnings,
+        Alerts: WidgetAlerts,
         Duplicate: WidgetDuplicate,
         Sample: WidgetSample,
         ToggleButton: WidgetToggleButton,
@@ -130,7 +135,7 @@ def get_widget_renderable_mapping() -> Dict[Type[Renderable], Type[Renderable]]:
     }
 
 
-def WidgetReport(structure: Renderable):
+def WidgetReport(structure: Root) -> Root:
     mapping = get_widget_renderable_mapping()
     apply_renderable_mapping(mapping, structure, flavour=WidgetReport)
     return structure

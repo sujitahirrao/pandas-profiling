@@ -1,11 +1,11 @@
 """Configuration for the package."""
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, BaseSettings, Field
 
 
-def _merge_dictionaries(dict1, dict2):
+def _merge_dictionaries(dict1: dict, dict2: dict) -> dict:
     """
     Recursive merge dictionaries.
 
@@ -195,8 +195,9 @@ class Correlations(BaseModel):
 
 
 class Interactions(BaseModel):
+    # Set to False to disable scatter plots
     continuous: bool = True
-    # FIXME: validate with column names
+
     targets: List[str] = []
 
 
@@ -232,6 +233,10 @@ class Report(BaseModel):
 
 
 class Settings(BaseSettings):
+    # Default prefix to avoid collisions with environment variables
+    class Config:
+        env_prefix = "profile_"
+
     # Title of the document
     title: str = "Pandas Profiling Report"
 
@@ -290,13 +295,13 @@ class Settings(BaseSettings):
     html: Html = Html()
     notebook = Notebook()
 
-    def update(self, updates):
+    def update(self, updates: dict) -> "Settings":
         update = _merge_dictionaries(self.dict(), updates)
         return self.parse_obj(self.copy(update=update))
 
 
 class Config:
-    arg_groups = {
+    arg_groups: Dict[str, Any] = {
         "sensitive": {
             "samples": None,
             "duplicates": None,
@@ -361,12 +366,12 @@ class Config:
     }
 
     @staticmethod
-    def get_arg_groups(key):
+    def get_arg_groups(key: str) -> dict:
         kwargs = Config.arg_groups[key]
         return Config.shorthands(kwargs)
 
     @staticmethod
-    def shorthands(kwargs):
+    def shorthands(kwargs: dict) -> dict:
         for key, value in list(kwargs.items()):
             if value is None and key in Config._shorthands:
                 kwargs[key] = Config._shorthands[key]

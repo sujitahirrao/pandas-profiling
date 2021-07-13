@@ -16,10 +16,10 @@ from pandas_profiling.report.structure.variables.render_common import render_com
 from pandas_profiling.visualisation.plot import pie_plot
 
 
-def render_boolean(config: Settings, summary: dict):
+def render_boolean(config: Settings, summary: dict) -> dict:
     varid = summary["varid"]
     n_obs_bool = config.vars.bool.n_obs
-    image_format = config.plot.image_format.value
+    image_format = config.plot.image_format
 
     # Prepare variables
     template_variables = render_common(config, summary)
@@ -27,7 +27,7 @@ def render_boolean(config: Settings, summary: dict):
     # Element composition
     info = VariableInfo(
         anchor_id=summary["varid"],
-        warnings=summary["warnings"],
+        alerts=summary["alerts"],
         var_type="Boolean",
         var_name=summary["varname"],
         description=summary["description"],
@@ -38,22 +38,22 @@ def render_boolean(config: Settings, summary: dict):
             {
                 "name": "Distinct",
                 "value": fmt(summary["n_distinct"]),
-                "alert": "n_distinct" in summary["warn_fields"],
+                "alert": "n_distinct" in summary["alert_fields"],
             },
             {
                 "name": "Distinct (%)",
                 "value": fmt_percent(summary["p_distinct"]),
-                "alert": "p_distinct" in summary["warn_fields"],
+                "alert": "p_distinct" in summary["alert_fields"],
             },
             {
                 "name": "Missing",
                 "value": fmt(summary["n_missing"]),
-                "alert": "n_missing" in summary["warn_fields"],
+                "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
                 "value": fmt_percent(summary["p_missing"]),
-                "alert": "p_missing" in summary["warn_fields"],
+                "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",

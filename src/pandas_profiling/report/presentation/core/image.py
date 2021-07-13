@@ -1,10 +1,21 @@
-from typing import Any
+from typing import Any, Optional
 
+from pandas_profiling.config import ImageType
 from pandas_profiling.report.presentation.core.item_renderer import ItemRenderer
 
 
 class Image(ItemRenderer):
-    def __init__(self, image, image_format, alt, caption=None, **kwargs):
+    def __init__(
+        self,
+        image: str,
+        image_format: ImageType,
+        alt: str,
+        caption: Optional[str] = None,
+        **kwargs,
+    ):
+        if image is None:
+            raise ValueError(f"Image may not be None (alt={alt}, caption={caption})")
+
         super().__init__(
             "image",
             {
@@ -13,10 +24,10 @@ class Image(ItemRenderer):
                 "alt": alt,
                 "caption": caption,
             },
-            **kwargs
+            **kwargs,
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Image"
 
     def render(self) -> Any:

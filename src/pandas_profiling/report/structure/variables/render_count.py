@@ -16,16 +16,16 @@ from pandas_profiling.report.structure.variables.render_common import render_com
 from pandas_profiling.visualisation.plot import histogram, mini_histogram
 
 
-def render_count(config: Settings, summary):
+def render_count(config: Settings, summary: dict) -> dict:
     template_variables = render_common(config, summary)
-    image_format = config.plot.image_format.value
+    image_format = config.plot.image_format
 
     # Top
     info = VariableInfo(
         summary["varid"],
         summary["varname"],
         "Real number (&Ropf; / &Ropf;<sub>&ge;0</sub>)",
-        summary["warnings"],
+        summary["alerts"],
         summary["description"],
     )
 

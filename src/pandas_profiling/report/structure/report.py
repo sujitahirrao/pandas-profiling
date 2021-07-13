@@ -1,12 +1,12 @@
 """Generate the report."""
-from typing import List
+from typing import List, Sequence
 
 import pandas as pd
 from tqdm.auto import tqdm
 
 from pandas_profiling.config import Settings
+from pandas_profiling.model.alerts import AlertType
 from pandas_profiling.model.handler import get_render_map
-from pandas_profiling.model.messages import MessageType
 from pandas_profiling.report.presentation.core import (
     HTML,
     Collapse,
@@ -22,10 +22,11 @@ from pandas_profiling.report.structure.overview import get_dataset_items
 from pandas_profiling.utils.dataframe import slugify
 
 
-def get_missing_items(config: Settings, summary) -> list:
+def get_missing_items(config: Settings, summary: dict) -> list:
     """Return the missing diagrams
 
     Args:
+        config: report Settings object
         summary: the dataframe summary
 
     Returns:
@@ -50,6 +51,7 @@ def render_variables_section(config: Settings, dataframe_summary: dict) -> list:
     """Render the HTML for each of the variables in the DataFrame.
 
     Args:
+        config: report Settings object
         dataframe_summary: The statistics for each variable.
 
     Returns:
@@ -66,31 +68,31 @@ def render_variables_section(config: Settings, dataframe_summary: dict) -> list:
 
     for idx, summary in dataframe_summary["variables"].items():
         # Common template variables
-        warnings = [
-            warning.fmt()
-            for warning in dataframe_summary["messages"]
-            if warning.column_name == idx
+        alerts = [
+            alert.fmt()
+            for alert in dataframe_summary["alerts"]
+            if alert.column_name == idx
         ]
 
-        warning_fields = {
+        alert_fields = {
             field
-            for warning in dataframe_summary["messages"]
-            if warning.column_name == idx
-            for field in warning.fields
+            for alert in dataframe_summary["alerts"]
+            if alert.column_name == idx
+            for field in alert.fields
         }
 
-        warning_types = {
-            warning.message_type
-            for warning in dataframe_summary["messages"]
-            if warning.column_name == idx
+        alert_types = {
+            alert.alert_type
+            for alert in dataframe_summary["alerts"]
+            if alert.column_name == idx
         }
 
         template_variables = {
             "varname": idx,
             "varid": hash(idx),
-            "warnings": warnings,
+            "alerts": alerts,
             "description": descriptions.get(idx, "") if show_description else "",
-            "warn_fields": warning_fields,
+            "alert_fields": alert_fields,
         }
 
         template_variables.update(summary)
@@ -102,7 +104,7 @@ def render_variables_section(config: Settings, dataframe_summary: dict) -> list:
 
         # Ignore these
         if reject_variables:
-            ignore = MessageType.REJECTED in warning_types
+            ignore = AlertType.REJECTED in alert_types
         else:
             ignore = False
 
@@ -124,7 +126,7 @@ def render_variables_section(config: Settings, dataframe_summary: dict) -> list:
     return templs
 
 
-def get_duplicates_items(duplicates: pd.DataFrame):
+def get_duplicates_items(duplicates: pd.DataFrame) -> Sequence[Renderable]:
     """Create the list of duplicates items
 
     Args:
@@ -145,7 +147,7 @@ def get_duplicates_items(duplicates: pd.DataFrame):
     return items
 
 
-def get_definition_items(definitions: pd.DataFrame):
+def get_definition_items(definitions: pd.DataFrame) -> Sequence[Renderable]:
     """Create the list of duplicates items
 
     Args:
@@ -166,7 +168,7 @@ def get_definition_items(definitions: pd.DataFrame):
     return items
 
 
-def get_sample_items(sample: dict):
+def get_sample_items(sample: dict) -> List[Sample]:
     """Create the list of sample items
 
     Args:
@@ -186,6 +188,7 @@ def get_scatter_matrix(config: Settings, scatter_matrix: dict) -> list:
     """Returns the interaction components for the report
 
     Args:
+        config: report Settings object
         scatter_matrix: a nested dict containing the scatter plots
 
     Returns:
@@ -217,10 +220,11 @@ def get_scatter_matrix(config: Settings, scatter_matrix: dict) -> list:
     return titems
 
 
-def get_report_structure(config: Settings, summary: dict) -> Renderable:
+def get_report_structure(config: Settings, summary: dict) -> Root:
     """Generate a HTML report from summary statistics and a given sample.
 
     Args:
+      config: report Settings object
       summary: Statistics to use for the overview, variables, correlations and missing values.
 
     Returns:
@@ -230,11 +234,11 @@ def get_report_structure(config: Settings, summary: dict) -> Renderable:
     with tqdm(
         total=1, desc="Generate report structure", disable=disable_progress_bar
     ) as pbar:
-        warnings = summary["messages"]
+        alerts = summary["alerts"]
 
         section_items: List[Renderable] = [
             Container(
-                get_dataset_items(config, summary, warnings),
+                get_dataset_items(config, summary, alerts),
                 sequence_type="tabs",
                 name="Overview",
                 anchor_id="overview",

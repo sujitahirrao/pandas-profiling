@@ -8,7 +8,7 @@ from pandas_profiling.visualisation.context import manage_matplotlib_context
 from pandas_profiling.visualisation.utils import hex_to_rgb, plot_360_n0sc0pe
 
 
-def get_font_size(data):
+def get_font_size(data: pd.DataFrame) -> float:
     """Calculate font size based on number of columns
 
     Args:
@@ -20,28 +20,28 @@ def get_font_size(data):
     max_label_length = max([len(label) for label in data.columns])
 
     if len(data.columns) < 20:
-        font_size = 13
+        font_size = 13.0
     elif 20 <= len(data.columns) < 40:
-        font_size = 12
+        font_size = 12.0
     elif 40 <= len(data.columns) < 60:
-        font_size = 10
+        font_size = 10.0
     else:
-        font_size = 8
+        font_size = 8.0
 
     font_size *= min(1.0, 20.0 / max_label_length)
     return font_size
 
 
 @manage_matplotlib_context()
-def missing_matrix(config: Settings, data: pd.DataFrame) -> str:
+def plot_missing_matrix(config: Settings, data: pd.DataFrame) -> str:
     """Generate missing values matrix plot
 
     Args:
-      config: Settings
-      data: Pandas DataFrame to generate missing values matrix from.
+        config: report Settings object
+        data: Pandas DataFrame to generate missing values matrix from.
 
     Returns:
-      The resulting missing values matrix encoded as a string.
+        The resulting missing values matrix encoded as a string.
     """
 
     missingno.matrix(
@@ -53,19 +53,19 @@ def missing_matrix(config: Settings, data: pd.DataFrame) -> str:
         labels=config.plot.missing.force_labels,
     )
     plt.subplots_adjust(left=0.1, right=0.9, top=0.7, bottom=0.2)
-    return plot_360_n0sc0pe(config, plt)
+    return plot_360_n0sc0pe(config)
 
 
 @manage_matplotlib_context()
-def missing_bar(config: Settings, data: pd.DataFrame) -> str:
+def plot_missing_bar(config: Settings, data: pd.DataFrame) -> str:
     """Generate missing values bar plot.
 
     Args:
-      config: Settings
-      data: Pandas DataFrame to generate missing values bar plot from.
+        config: report Settings object
+        data: Pandas DataFrame to generate missing values bar plot from.
 
     Returns:
-      The resulting missing values bar plot encoded as a string.
+        The resulting missing values bar plot encoded as a string.
     """
     missingno.bar(
         data,
@@ -78,19 +78,19 @@ def missing_bar(config: Settings, data: pd.DataFrame) -> str:
         ax0.grid(False)
     plt.subplots_adjust(left=0.1, right=0.9, top=0.8, bottom=0.3)
 
-    return plot_360_n0sc0pe(config, plt)
+    return plot_360_n0sc0pe(config)
 
 
 @manage_matplotlib_context()
-def missing_heatmap(config: Settings, data: pd.DataFrame) -> str:
+def plot_missing_heatmap(config: Settings, data: pd.DataFrame) -> str:
     """Generate missing values heatmap plot.
 
     Args:
-      config: Settings
-      data: Pandas DataFrame to generate missing values heatmap plot from.
+        config: report Settings object
+        data: Pandas DataFrame to generate missing values heatmap plot from.
 
     Returns:
-      The resulting missing values heatmap plot encoded as a string.
+        The resulting missing values heatmap plot encoded as a string.
     """
 
     height = 4
@@ -115,15 +115,16 @@ def missing_heatmap(config: Settings, data: pd.DataFrame) -> str:
     else:
         plt.subplots_adjust(left=0.2, right=0.9, top=0.8, bottom=0.3)
 
-    return plot_360_n0sc0pe(config, plt)
+    return plot_360_n0sc0pe(config)
 
 
 @manage_matplotlib_context()
-def missing_dendrogram(config: Settings, data: pd.DataFrame) -> str:
+def plot_missing_dendrogram(config: Settings, data: pd.DataFrame) -> str:
     """Generate a dendrogram plot for missing values.
 
     Args:
-      data: Pandas DataFrame to generate missing values dendrogram plot from.
+        config: report Settings object
+        data: Pandas DataFrame to generate missing values dendrogram plot from.
 
     Returns:
       The resulting missing values dendrogram plot encoded as a string.
@@ -131,4 +132,4 @@ def missing_dendrogram(config: Settings, data: pd.DataFrame) -> str:
     """
     missingno.dendrogram(data, fontsize=get_font_size(data) * 2.0)
     plt.subplots_adjust(left=0.1, right=0.9, top=0.7, bottom=0.2)
-    return plot_360_n0sc0pe(config, plt)
+    return plot_360_n0sc0pe(config)
