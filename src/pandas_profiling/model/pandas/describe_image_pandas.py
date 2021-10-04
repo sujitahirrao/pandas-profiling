@@ -41,9 +41,10 @@ def is_image_truncated(image: Image) -> bool:
     """
     try:
         image.load()
-        return False
     except (OSError, AttributeError):
         return True
+    else:
+        return False
 
 
 def get_image_shape(image: Image) -> Optional[Tuple[int, int]]:
@@ -212,7 +213,7 @@ def image_summary(series: pd.Series, exif: bool = False, hash: bool = False) -> 
     )
     summary = {
         "n_truncated": sum(
-            [1 for x in image_information if "truncated" in x and x["truncated"]]
+            1 for x in image_information if "truncated" in x and x["truncated"]
         ),
         "image_dimensions": pd.Series(
             [x["size"] for x in image_information if "size" in x],
