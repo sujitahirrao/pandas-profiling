@@ -1,3 +1,4 @@
+from pandas_profiling.report.presentation.flavours.widget.alerts import WidgetAlerts
 from pandas_profiling.report.presentation.flavours.widget.collapse import WidgetCollapse
 from pandas_profiling.report.presentation.flavours.widget.container import (
     WidgetContainer,
@@ -23,4 +24,20 @@ from pandas_profiling.report.presentation.flavours.widget.variable import Widget
 from pandas_profiling.report.presentation.flavours.widget.variable_info import (
     WidgetVariableInfo,
 )
-from pandas_profiling.report.presentation.flavours.widget.warnings import WidgetWarnings
+
+__all__ = [
+    "WidgetCollapse",
+    "WidgetContainer",
+    "WidgetDuplicate",
+    "WidgetFrequencyTable",
+    "WidgetFrequencyTableSmall",
+    "WidgetHTML",
+    "WidgetImage",
+    "WidgetRoot",
+    "WidgetSample",
+    "WidgetTable",
+    "WidgetToggleButton",
+    "WidgetVariable",
+    "WidgetVariableInfo",
+    "WidgetAlerts",
+]

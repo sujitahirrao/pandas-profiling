@@ -12,9 +12,12 @@
 <p align="center">
   <a href="https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/">Documentation</a>
   |
-  <a href="https://join.slack.com/t/pandas-profiling/shared_invite/zt-l2iqwb92-9JpTEdFBijR2G798j2MpQw">Slack</a>
+  <a href="https://join.slack.com/t/pandas-profiling/shared_invite/zt-oe5ol4yc-YtbOxNBGUCb~v73TamRLuA">Slack</a>
   | 
   <a href="https://stackoverflow.com/questions/tagged/pandas-profiling">Stack Overflow</a>
+  |
+  <a href="https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/changelog.html#changelog">Latest changelog</a>
+
 </p>
 
 Generates profile reports from a pandas `DataFrame`. 
@@ -37,32 +40,24 @@ For each column the following statistics - if relevant for the column type - are
 
 ## Announcements
 
-**Version v2.11.0 released** featuring an exciting integration with Great Expectations that many of you requested (see details below).
-
 **Spark backend in progress**: We can happily announce that we're nearing v1 for the Spark backend for generating profile reports.
-Stay tuned.
+Beta testers wanted! The Spark backend will be released as a pre-release for this package.
 
-### Support `pandas-profiling`
+**Monitoring time series?**: I'd like to draw your attention to [popmon](https://github.com/ing-bank/popmon). Whereas pandas-profiling allows you to explore patterns in a single dataset, popmon allows you to uncover temporal patterns. It's worth checking out!
 
+**Support `pandas-profiling`** 
 The development of `pandas-profiling` relies completely on contributions.
 If you find value in the package, we welcome you to support the project directly through [GitHub Sponsors](https://github.com/sponsors/sbrugman)!
 Please help me to continue to support this package.
-It's extra exciting that GitHub **matches your contribution** for the first year.
-
-Find more information here:
-
- - [Changelog v2.11.0](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/changelog.html#changelog-v2-11-0)
- - [Sponsor the project on GitHub](https://github.com/sponsors/sbrugman)
-
-_February 20, 2021 💘_
+Find more information: [Sponsor the project on GitHub](https://github.com/sponsors/sbrugman)
 
 ---
 
 _Contents:_ **[Examples](#examples)** |
 **[Installation](#installation)** | **[Documentation](#documentation)** |
 **[Large datasets](#large-datasets)** | **[Command line usage](#command-line-usage)** |
-**[Advanced usage](#advanced-usage)** | **[integrations](#integrations)** |
-**[Support](#supporting-open-source)** | **[Types](#types)** | **[How to contribute](#contributing)** |
+**[Advanced usage](#advanced-usage)** | **[Support](#support)** | **[Go beyond](#go-beyond)** |
+**[Support the project](#supporting-open-source)** | **[Types](#types)** | **[How to contribute](#contributing)** |
 **[Editor Integration](#editor-integration)** | **[Dependencies](#dependencies)**
 
 ---
@@ -78,7 +73,8 @@ The following examples can give you an impression of what the package can do:
 * [Stata Auto](https://pandas-profiling.github.io/pandas-profiling/examples/master/stata_auto/stata_auto_report.html) (1978 Automobile data)
 * [Vektis](https://pandas-profiling.github.io/pandas-profiling/examples/master/vektis/vektis_report.html) (Vektis Dutch Healthcare data)
 * [Colors](https://pandas-profiling.github.io/pandas-profiling/examples/master/colors/colors_report.html) (a simple colors dataset)
-* [UCI Bank Dataset](https://pandas-profiling.github.io/pandas-profiling/examples/master/cbank_marketing_data/uci_bank_marketing_report.html) (banking marketing dataset)
+* [UCI Bank Dataset](https://pandas-profiling.github.io/pandas-profiling/examples/master/bank_marketing_data/uci_bank_marketing_report.html) (banking marketing dataset)
+* [RDW](https://pandas-profiling.github.io/pandas-profiling/examples/master/rdw/rdw.html) (RDW, the Dutch DMV's vehicle registration 10 million rows, 71 features)
 
 
 Specific features:
@@ -148,10 +144,7 @@ import numpy as np
 import pandas as pd
 from pandas_profiling import ProfileReport
 
-df = pd.DataFrame(
-    np.random.rand(100, 5),
-    columns=["a", "b", "c", "d", "e"]
-)
+df = pd.DataFrame(np.random.rand(100, 5), columns=["a", "b", "c", "d", "e"])
 ```
 To generate the report, run:
 ```python
@@ -160,10 +153,10 @@ profile = ProfileReport(df, title="Pandas Profiling Report")
 
 ### Explore deeper
 
-You can configure the profile report in any way you like. The example code below loads the [explorative configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_explorative.yaml), that includes many features for text (length distribution, unicode information), files (file size, creation time) and images (dimensions, exif information). If you are interested what exact settings were used, you can compare with the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml).
+You can configure the profile report in any way you like. The example code below loads the explorative configuration, that includes many features for text (length distribution, unicode information), files (file size, creation time) and images (dimensions, exif information). If you are interested what exact settings were used, you can compare with the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml).
 
 ```python
-profile = ProfileReport(df, title='Pandas Profiling Report', explorative=True)
+profile = ProfileReport(df, title="Pandas Profiling Report", explorative=True)
 ```
 
 Learn more about configuring `pandas-profiling` on the [Advanced usage](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/advanced_usage.html) page.
@@ -211,7 +204,7 @@ profile.to_file("your_report.json")
 
 Version 2.4 introduces minimal mode. 
 
-This is a default configuration that disables expensive computations (such as correlations and dynamic binning).
+This is a default configuration that disables expensive computations (such as correlations and duplicate row detection).
 
 Use the following syntax:
 
@@ -219,6 +212,8 @@ Use the following syntax:
 profile = ProfileReport(large_dataset, minimal=True)
 profile.to_file("output.html")
 ```
+
+Benchmarks are available [here](https://pandas-profiling.github.io/pandas-profiling/dev/bench/).
 
 ### Command line usage
 
@@ -239,17 +234,54 @@ A set of options is available in order to adapt the report generated.
 * `progress_bar` (`bool`): If True, `pandas-profiling` will display a progress bar.
 * `infer_dtypes` (`bool`): When `True` (default) the `dtype` of variables are inferred using `visions` using the typeset logic (for instance a column that has integers stored as string will be analyzed as if being numeric).
 
-More settings can be found in the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml), [minimal configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_minimal.yaml) and [dark themed configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_dark.yaml).
+More settings can be found in the [default configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_default.yaml) and [minimal configuration file](https://github.com/pandas-profiling/pandas-profiling/blob/master/src/pandas_profiling/config_minimal.yaml).
 
 You find the configuration docs on the advanced usage page [here](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/advanced_usage.html)
 
 **Example**
 ```python
-profile = df.profile_report(title='Pandas Profiling Report', plot={'histogram': {'bins': 8}})
+profile = df.profile_report(
+    title="Pandas Profiling Report", plot={"histogram": {"bins": 8}}
+)
 profile.to_file("output.html")
 ```
 
-## Integrations
+## Support
+Need help? Want to share a perspective? Want to report a bug? Ideas for collaboration? 
+You can reach out via the following channels:
+
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/pandas-profiling): ideal for asking questions on how to use the package
+- [Github Issues](https://github.com/pandas-profiling/pandas-profiling/issues): bugs, proposals for change, feature requests
+- [Slack](https://join.slack.com/t/pandas-profiling/shared_invite/zt-oe5ol4yc-YtbOxNBGUCb~v73TamRLuA): general chat, questions, collaboration
+- [Email](mailto:pandasprofiling@gmail.com): project collaboration or sponsoring
+
+## Go beyond
+
+### Popmon
+
+<table>
+<tr>
+<td>
+
+<a href="https://github.com/ing-bank/popmon">
+	<img alt="Popmon" src="https://raw.githubusercontent.com/ing-bank/popmon/master/docs/source/assets/popmon-logo.png" width="900" />
+</a>
+	
+</td>
+<td>
+
+For many real-world problems we are interested how the data changes over time. 
+The excellent pacakge `popmon` allows you to profile and monitor data trends over time and generates reports in a similar fashion as you're used to using pandas-profiling.
+Inspecting the report often shows patterns that are going by undetected during standard data exploration.
+Moreover, popmon can be used to monitor the stability of input and output of machine learning models.
+The package is fully open-source and you can find it [here](https://github.com/ing-bank/popmon)! 
+
+To learn more on Popmon, have a look at these resources [here](https://github.com/ing-bank/popmon#resources)
+
+</td>
+</tr>
+</table>
+
 
 ### Great Expectations
 
@@ -257,8 +289,10 @@ profile.to_file("output.html")
 <tr>
 <td>
 
+<a href="https://www.greatexpectations.io">
 <img alt="Great Expectations" src="https://github.com/great-expectations/great_expectations/raw/develop/generic_dickens_protagonist.png" width="900" />
-
+</a>
+	
 </td>
 <td>
 
@@ -295,7 +329,7 @@ Maintaining and developing the open-source code for pandas-profiling, with milli
 
 We would like to thank our generous Github Sponsors supporters who make pandas-profiling possible: 
 
-    Martin Sotir, Brian Lee, Stephanie Rivera, abdulAziz, gramster
+    Martin Sotir, Stephanie Rivera, abdulAziz
 
 More info if you would like to appear here: [Github Sponsor page](https://github.com/sponsors/sbrugman)
 
@@ -306,14 +340,15 @@ Types are a powerful abstraction for effective data analysis, that goes beyond t
 `pandas-profiling` currently, recognizes the following types: _Boolean, Numerical, Date, Categorical, URL, Path, File_ and _Image_.
 
 We have developed a type system for Python, tailored for data analysis: [visions](https://github.com/dylan-profiler/visions).
-Selecting the right typeset drastically reduces the complexity the code of your analysis.
-Future versions of `pandas-profiling` will have extended type support through `visions`!
+Choosing an appropriate typeset can both improve the overall expressiveness and reduce the complexity of your analysis/code.
+To learn more about `pandas-profiling`'s type system, check out the default implementation [here](https://github.com/pandas-profiling/pandas-profiling/blob/develop/src/pandas_profiling/model/typeset.py).
+In the meantime, user customized summarizations and type definitions are now fully supported - if you have a specific use-case please reach out with ideas or a PR!
 
 ## Contributing
 
 Read on getting involved in the [Contribution Guide](https://pandas-profiling.github.io/pandas-profiling/docs/master/rtd/pages/contribution_guidelines.html).
 
-A low threshold place to ask questions or start contributing is by reaching out on the pandas-profiling Slack. [Join the Slack community](https://join.slack.com/t/pandas-profiling/shared_invite/zt-hfy3iwp2-qEJSItye5QBZf8YGFMaMnQ).
+A low threshold place to ask questions or start contributing is by reaching out on the pandas-profiling Slack. [Join the Slack community](https://join.slack.com/t/pandas-profiling/shared_invite/zt-oe5ol4yc-YtbOxNBGUCb~v73TamRLuA).
 
 ## Editor integration
 

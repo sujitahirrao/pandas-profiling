@@ -1,6 +1,6 @@
 import pytest
 
-from pandas_profiling.model.summary import sort_column_names
+from pandas_profiling.utils.dataframe import sort_column_names
 
 
 @pytest.fixture()
@@ -8,7 +8,7 @@ def input_variables():
     return {"var1": None, "Boolean": None, "Python": None, "#0": None}
 
 
-@pytest.mark.parametrize("sort", ["None", "none"])
+@pytest.mark.parametrize("sort", [None])
 def test_none(sort, input_variables):
     expected_variables = {"var1": None, "Boolean": None, "Python": None, "#0": None}
     sorted_variables = sort_column_names(input_variables, sort)

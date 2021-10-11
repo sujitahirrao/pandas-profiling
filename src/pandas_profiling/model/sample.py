@@ -1,37 +1,37 @@
-import attr
-import pandas as pd
+from typing import List, Optional, TypeVar
 
-from pandas_profiling.config import config
+from multimethod import multimethod
+from pydantic.main import BaseModel
 
+from pandas_profiling.config import Settings
 
-@attr.s
-class Sample:
-    id = attr.ib()
-    data = attr.ib()
-    name = attr.ib()
-    caption = attr.ib(default=None)
+T = TypeVar("T")  # type: ignore
 
 
-def get_sample(df: pd.DataFrame) -> list:
-    """Obtains a sample from head and tail of the DataFrame
+class Sample(BaseModel):
+    id: str
+    data: T  # type: ignore
+    name: str
+    caption: Optional[str] = None
 
-    Args:
-        df: the pandas DataFrame
 
-    Returns:
-        a list of Sample objects
-    """
-    samples = []
-    n_head = config["samples"]["head"].get(int)
-    if n_head > 0:
-        samples.append(Sample("head", df.head(n=n_head), "First rows"))
+@multimethod
+def get_sample(config: Settings, df: T) -> List[Sample]:
+    raise NotImplementedError()
 
-    n_tail = config["samples"]["tail"].get(int)
-    if n_tail > 0:
-        samples.append(Sample("tail", df.tail(n=n_tail), "Last rows"))
 
-    n_random = config["samples"]["random"].get(int)
-    if n_random > 0:
-        samples.append(Sample("random", df.sample(n=n_random), "Random sample"))
+def get_custom_sample(sample: dict) -> List[Sample]:
+    if "name" not in sample:
+        sample["name"] = None
+    if "caption" not in sample:
+        sample["caption"] = None
 
+    samples = [
+        Sample(
+            id="custom",
+            data=sample["data"],
+            name=sample["name"],
+            caption=sample["caption"],
+        )
+    ]
     return samples

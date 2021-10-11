@@ -1,3 +1,5 @@
+from pandas_profiling.config import Settings
+from pandas_profiling.report.formatters import fmt, fmt_bytesize, fmt_percent
 from pandas_profiling.report.presentation.core import (
     HTML,
     Container,
@@ -6,10 +8,10 @@ from pandas_profiling.report.presentation.core import (
 )
 
 
-def render_generic(summary):
+def render_generic(config: Settings, summary: dict) -> dict:
     info = VariableInfo(
         anchor_id=summary["varid"],
-        warnings=summary["warnings"],
+        alerts=summary["alerts"],
         var_type="Unsupported",
         var_name=summary["varname"],
         description=summary["description"],
@@ -19,20 +21,17 @@ def render_generic(summary):
         [
             {
                 "name": "Missing",
-                "value": summary["n_missing"],
-                "fmt": "fmt",
-                "alert": "n_missing" in summary["warn_fields"],
+                "value": fmt(summary["n_missing"]),
+                "alert": "n_missing" in summary["alert_fields"],
             },
             {
                 "name": "Missing (%)",
-                "value": summary["p_missing"],
-                "fmt": "fmt_percent",
-                "alert": "p_missing" in summary["warn_fields"],
+                "value": fmt_percent(summary["p_missing"]),
+                "alert": "p_missing" in summary["alert_fields"],
             },
             {
                 "name": "Memory size",
-                "value": summary["memory_size"],
-                "fmt": "fmt_bytesize",
+                "value": fmt_bytesize(summary["memory_size"]),
                 "alert": False,
             },
         ]

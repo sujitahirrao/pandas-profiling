@@ -1,28 +1,14 @@
-from typing import Optional
+from typing import Any, Dict, Optional, Sequence, Tuple, TypeVar
 
-import pandas as pd
+from multimethod import multimethod
 
-from pandas_profiling.config import config
+from pandas_profiling.config import Settings
+
+T = TypeVar("T")
 
 
-def get_duplicates(df: pd.DataFrame, supported_columns) -> Optional[pd.DataFrame]:
-    """Obtain the most occurring duplicate rows in the DataFrame.
-
-    Args:
-        df: the Pandas DataFrame.
-        supported_columns: the columns to consider
-
-    Returns:
-        A subset of the DataFrame, ordered by occurrence.
-    """
-    n_head = config["duplicates"]["head"].get(int)
-
-    if n_head > 0 and supported_columns:
-        return (
-            df[df.duplicated(subset=supported_columns, keep=False)]
-            .groupby(supported_columns)
-            .size()
-            .reset_index(name="count")
-            .nlargest(n_head, "count")
-        )
-    return None
+@multimethod
+def get_duplicates(
+    config: Settings, df: T, supported_columns: Sequence
+) -> Tuple[Dict[str, Any], Optional[T]]:
+    raise NotImplementedError()

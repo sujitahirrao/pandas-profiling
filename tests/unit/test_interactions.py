@@ -1,9 +1,7 @@
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
 
-import pandas_profiling
+from pandas_profiling import ProfileReport
 
 
 def test_interactions_target():
@@ -17,11 +15,9 @@ def test_interactions_target():
     )
     targets = [f"column_{target}" for target in range(0, n_targets)]
 
-    profile = df.profile_report(
-        minimal=True, interactions={"continuous": True, "targets": targets}
+    profile = ProfileReport(
+        df, minimal=True, interactions={"continuous": True, "targets": targets}
     )
 
-    total = sum(
-        [len(v.keys()) for k, v in profile.get_description()["scatter"].items()]
-    )
+    total = sum(len(v.keys()) for k, v in profile.get_description()["scatter"].items())
     assert total == n_targets * n_columns

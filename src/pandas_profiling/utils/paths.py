@@ -11,16 +11,7 @@ def get_project_root() -> Path:
     return Path(__file__).parent.parent.parent.parent
 
 
-def get_config_default() -> Path:
-    """Returns the path to the default config file.
-
-    Returns:
-        The path to the default config file.
-    """
-    return Path(__file__).parent.parent / "config_default.yaml"
-
-
-def get_config(file_name) -> Path:
+def get_config(file_name: str) -> Path:
     """Returns the path a config file.
 
     Returns:
