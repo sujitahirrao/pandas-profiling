@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>pandas_profiling.report.presentation.flavours.flavours API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -26,15 +26,18 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from typing import Dict, Type
+<pre><code class="python">from typing import Callable, Dict, Type
 
+from pandas_profiling.report.presentation.core import Root
 from pandas_profiling.report.presentation.core.renderable import Renderable
 
 
-def apply_renderable_mapping(mapping, structure, flavour):
-    for key, value in mapping.items():
-        if isinstance(structure, key):
-            value.convert_to_class(structure, flavour)
+def apply_renderable_mapping(
+    mapping: Dict[Type[Renderable], Type[Renderable]],
+    structure: Renderable,
+    flavour: Callable,
+) -&gt; None:
+    mapping[type(structure)].convert_to_class(structure, flavour)
 
 
 def get_html_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]:
@@ -45,6 +48,7 @@ def get_html_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]
     &#34;&#34;&#34;
     from pandas_profiling.report.presentation.core import (
         HTML,
+        Alerts,
         Collapse,
         Container,
         Duplicate,
@@ -57,10 +61,10 @@ def get_html_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]
         ToggleButton,
         Variable,
         VariableInfo,
-        Warnings,
     )
     from pandas_profiling.report.presentation.flavours.html import (
         HTMLHTML,
+        HTMLAlerts,
         HTMLCollapse,
         HTMLContainer,
         HTMLDuplicate,
@@ -73,7 +77,6 @@ def get_html_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]
         HTMLToggleButton,
         HTMLVariable,
         HTMLVariableInfo,
-        HTMLWarnings,
     )
 
     return {
@@ -86,7 +89,7 @@ def get_html_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]
         Image: HTMLImage,
         FrequencyTable: HTMLFrequencyTable,
         FrequencyTableSmall: HTMLFrequencyTableSmall,
-        Warnings: HTMLWarnings,
+        Alerts: HTMLAlerts,
         Duplicate: HTMLDuplicate,
         Sample: HTMLSample,
         ToggleButton: HTMLToggleButton,
@@ -94,7 +97,7 @@ def get_html_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]
     }
 
 
-def HTMLReport(structure: Renderable):
+def HTMLReport(structure: Root) -&gt; Root:
     &#34;&#34;&#34;Adds HTML flavour to Renderable
 
     Args:
@@ -111,6 +114,7 @@ def HTMLReport(structure: Renderable):
 def get_widget_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]:
     from pandas_profiling.report.presentation.core import (
         HTML,
+        Alerts,
         Collapse,
         Container,
         Duplicate,
@@ -123,9 +127,9 @@ def get_widget_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable
         ToggleButton,
         Variable,
         VariableInfo,
-        Warnings,
     )
     from pandas_profiling.report.presentation.flavours.widget import (
+        WidgetAlerts,
         WidgetCollapse,
         WidgetContainer,
         WidgetDuplicate,
@@ -139,7 +143,6 @@ def get_widget_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable
         WidgetToggleButton,
         WidgetVariable,
         WidgetVariableInfo,
-        WidgetWarnings,
     )
 
     return {
@@ -152,7 +155,7 @@ def get_widget_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable
         Image: WidgetImage,
         FrequencyTable: WidgetFrequencyTable,
         FrequencyTableSmall: WidgetFrequencyTableSmall,
-        Warnings: WidgetWarnings,
+        Alerts: WidgetAlerts,
         Duplicate: WidgetDuplicate,
         Sample: WidgetSample,
         ToggleButton: WidgetToggleButton,
@@ -160,67 +163,9 @@ def get_widget_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable
     }
 
 
-def WidgetReport(structure: Renderable):
+def WidgetReport(structure: Root) -&gt; Root:
     mapping = get_widget_renderable_mapping()
     apply_renderable_mapping(mapping, structure, flavour=WidgetReport)
-    return structure
-
-
-def get_qt_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]:
-    from pandas_profiling.report.presentation.core import (
-        HTML,
-        Collapse,
-        Container,
-        Duplicate,
-        FrequencyTable,
-        FrequencyTableSmall,
-        Image,
-        Root,
-        Sample,
-        Table,
-        ToggleButton,
-        Variable,
-        VariableInfo,
-        Warnings,
-    )
-    from pandas_profiling.report.presentation.flavours.qt import (
-        QtCollapse,
-        QtContainer,
-        QtDuplicate,
-        QtFrequencyTable,
-        QtFrequencyTableSmall,
-        QtHTML,
-        QtImage,
-        QtRoot,
-        QtSample,
-        QtTable,
-        QtToggleButton,
-        QtVariable,
-        QtVariableInfo,
-        QtWarnings,
-    )
-
-    return {
-        Container: QtContainer,
-        Variable: QtVariable,
-        VariableInfo: QtVariableInfo,
-        Table: QtTable,
-        HTML: QtHTML,
-        Root: QtRoot,
-        Image: QtImage,
-        FrequencyTable: QtFrequencyTable,
-        FrequencyTableSmall: QtFrequencyTableSmall,
-        Warnings: QtWarnings,
-        Duplicate: QtDuplicate,
-        Sample: QtSample,
-        Collapse: QtCollapse,
-        ToggleButton: QtToggleButton,
-    }
-
-
-def QtReport(structure: Renderable):
-    mapping = get_qt_renderable_mapping()
-    apply_renderable_mapping(mapping, structure, flavour=QtReport)
     return structure</code></pre>
 </details>
 </section>
@@ -232,7 +177,7 @@ def QtReport(structure: Renderable):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="pandas_profiling.report.presentation.flavours.flavours.HTMLReport"><code class="name flex">
-<span>def <span class="ident">HTMLReport</span></span>(<span>structure: <a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>)</span>
+<span>def <span class="ident">HTMLReport</span></span>(<span>structure: <a title="pandas_profiling.report.presentation.core.root.Root" href="../core/root.html#pandas_profiling.report.presentation.core.root.Root">Root</a>) ‑> <a title="pandas_profiling.report.presentation.core.root.Root" href="../core/root.html#pandas_profiling.report.presentation.core.root.Root">Root</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds HTML flavour to Renderable</p>
@@ -243,7 +188,7 @@ Returns:</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def HTMLReport(structure: Renderable):
+<pre><code class="python">def HTMLReport(structure: Root) -&gt; Root:
     &#34;&#34;&#34;Adds HTML flavour to Renderable
 
     Args:
@@ -257,23 +202,8 @@ Returns:</p></div>
     return structure</code></pre>
 </details>
 </dd>
-<dt id="pandas_profiling.report.presentation.flavours.flavours.QtReport"><code class="name flex">
-<span>def <span class="ident">QtReport</span></span>(<span>structure: <a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def QtReport(structure: Renderable):
-    mapping = get_qt_renderable_mapping()
-    apply_renderable_mapping(mapping, structure, flavour=QtReport)
-    return structure</code></pre>
-</details>
-</dd>
 <dt id="pandas_profiling.report.presentation.flavours.flavours.WidgetReport"><code class="name flex">
-<span>def <span class="ident">WidgetReport</span></span>(<span>structure: <a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>)</span>
+<span>def <span class="ident">WidgetReport</span></span>(<span>structure: <a title="pandas_profiling.report.presentation.core.root.Root" href="../core/root.html#pandas_profiling.report.presentation.core.root.Root">Root</a>) ‑> <a title="pandas_profiling.report.presentation.core.root.Root" href="../core/root.html#pandas_profiling.report.presentation.core.root.Root">Root</a></span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -281,14 +211,14 @@ Returns:</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def WidgetReport(structure: Renderable):
+<pre><code class="python">def WidgetReport(structure: Root) -&gt; Root:
     mapping = get_widget_renderable_mapping()
     apply_renderable_mapping(mapping, structure, flavour=WidgetReport)
     return structure</code></pre>
 </details>
 </dd>
 <dt id="pandas_profiling.report.presentation.flavours.flavours.apply_renderable_mapping"><code class="name flex">
-<span>def <span class="ident">apply_renderable_mapping</span></span>(<span>mapping, structure, flavour)</span>
+<span>def <span class="ident">apply_renderable_mapping</span></span>(<span>mapping: Dict[Type[<a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>], Type[<a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>]], structure: <a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>, flavour: Callable) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -296,10 +226,12 @@ Returns:</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def apply_renderable_mapping(mapping, structure, flavour):
-    for key, value in mapping.items():
-        if isinstance(structure, key):
-            value.convert_to_class(structure, flavour)</code></pre>
+<pre><code class="python">def apply_renderable_mapping(
+    mapping: Dict[Type[Renderable], Type[Renderable]],
+    structure: Renderable,
+    flavour: Callable,
+) -&gt; None:
+    mapping[type(structure)].convert_to_class(structure, flavour)</code></pre>
 </details>
 </dd>
 <dt id="pandas_profiling.report.presentation.flavours.flavours.get_html_renderable_mapping"><code class="name flex">
@@ -321,6 +253,7 @@ Returns:</p></div>
     &#34;&#34;&#34;
     from pandas_profiling.report.presentation.core import (
         HTML,
+        Alerts,
         Collapse,
         Container,
         Duplicate,
@@ -333,10 +266,10 @@ Returns:</p></div>
         ToggleButton,
         Variable,
         VariableInfo,
-        Warnings,
     )
     from pandas_profiling.report.presentation.flavours.html import (
         HTMLHTML,
+        HTMLAlerts,
         HTMLCollapse,
         HTMLContainer,
         HTMLDuplicate,
@@ -349,7 +282,6 @@ Returns:</p></div>
         HTMLToggleButton,
         HTMLVariable,
         HTMLVariableInfo,
-        HTMLWarnings,
     )
 
     return {
@@ -362,72 +294,11 @@ Returns:</p></div>
         Image: HTMLImage,
         FrequencyTable: HTMLFrequencyTable,
         FrequencyTableSmall: HTMLFrequencyTableSmall,
-        Warnings: HTMLWarnings,
+        Alerts: HTMLAlerts,
         Duplicate: HTMLDuplicate,
         Sample: HTMLSample,
         ToggleButton: HTMLToggleButton,
         Collapse: HTMLCollapse,
-    }</code></pre>
-</details>
-</dd>
-<dt id="pandas_profiling.report.presentation.flavours.flavours.get_qt_renderable_mapping"><code class="name flex">
-<span>def <span class="ident">get_qt_renderable_mapping</span></span>(<span>) ‑> Dict[Type[<a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>], Type[<a title="pandas_profiling.report.presentation.core.renderable.Renderable" href="../core/renderable.html#pandas_profiling.report.presentation.core.renderable.Renderable">Renderable</a>]]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_qt_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]:
-    from pandas_profiling.report.presentation.core import (
-        HTML,
-        Collapse,
-        Container,
-        Duplicate,
-        FrequencyTable,
-        FrequencyTableSmall,
-        Image,
-        Root,
-        Sample,
-        Table,
-        ToggleButton,
-        Variable,
-        VariableInfo,
-        Warnings,
-    )
-    from pandas_profiling.report.presentation.flavours.qt import (
-        QtCollapse,
-        QtContainer,
-        QtDuplicate,
-        QtFrequencyTable,
-        QtFrequencyTableSmall,
-        QtHTML,
-        QtImage,
-        QtRoot,
-        QtSample,
-        QtTable,
-        QtToggleButton,
-        QtVariable,
-        QtVariableInfo,
-        QtWarnings,
-    )
-
-    return {
-        Container: QtContainer,
-        Variable: QtVariable,
-        VariableInfo: QtVariableInfo,
-        Table: QtTable,
-        HTML: QtHTML,
-        Root: QtRoot,
-        Image: QtImage,
-        FrequencyTable: QtFrequencyTable,
-        FrequencyTableSmall: QtFrequencyTableSmall,
-        Warnings: QtWarnings,
-        Duplicate: QtDuplicate,
-        Sample: QtSample,
-        Collapse: QtCollapse,
-        ToggleButton: QtToggleButton,
     }</code></pre>
 </details>
 </dd>
@@ -443,6 +314,7 @@ Returns:</p></div>
 <pre><code class="python">def get_widget_renderable_mapping() -&gt; Dict[Type[Renderable], Type[Renderable]]:
     from pandas_profiling.report.presentation.core import (
         HTML,
+        Alerts,
         Collapse,
         Container,
         Duplicate,
@@ -455,9 +327,9 @@ Returns:</p></div>
         ToggleButton,
         Variable,
         VariableInfo,
-        Warnings,
     )
     from pandas_profiling.report.presentation.flavours.widget import (
+        WidgetAlerts,
         WidgetCollapse,
         WidgetContainer,
         WidgetDuplicate,
@@ -471,7 +343,6 @@ Returns:</p></div>
         WidgetToggleButton,
         WidgetVariable,
         WidgetVariableInfo,
-        WidgetWarnings,
     )
 
     return {
@@ -484,7 +355,7 @@ Returns:</p></div>
         Image: WidgetImage,
         FrequencyTable: WidgetFrequencyTable,
         FrequencyTableSmall: WidgetFrequencyTableSmall,
-        Warnings: WidgetWarnings,
+        Alerts: WidgetAlerts,
         Duplicate: WidgetDuplicate,
         Sample: WidgetSample,
         ToggleButton: WidgetToggleButton,
@@ -511,11 +382,9 @@ Returns:</p></div>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="pandas_profiling.report.presentation.flavours.flavours.HTMLReport" href="#pandas_profiling.report.presentation.flavours.flavours.HTMLReport">HTMLReport</a></code></li>
-<li><code><a title="pandas_profiling.report.presentation.flavours.flavours.QtReport" href="#pandas_profiling.report.presentation.flavours.flavours.QtReport">QtReport</a></code></li>
 <li><code><a title="pandas_profiling.report.presentation.flavours.flavours.WidgetReport" href="#pandas_profiling.report.presentation.flavours.flavours.WidgetReport">WidgetReport</a></code></li>
 <li><code><a title="pandas_profiling.report.presentation.flavours.flavours.apply_renderable_mapping" href="#pandas_profiling.report.presentation.flavours.flavours.apply_renderable_mapping">apply_renderable_mapping</a></code></li>
 <li><code><a title="pandas_profiling.report.presentation.flavours.flavours.get_html_renderable_mapping" href="#pandas_profiling.report.presentation.flavours.flavours.get_html_renderable_mapping">get_html_renderable_mapping</a></code></li>
-<li><code><a title="pandas_profiling.report.presentation.flavours.flavours.get_qt_renderable_mapping" href="#pandas_profiling.report.presentation.flavours.flavours.get_qt_renderable_mapping">get_qt_renderable_mapping</a></code></li>
 <li><code><a title="pandas_profiling.report.presentation.flavours.flavours.get_widget_renderable_mapping" href="#pandas_profiling.report.presentation.flavours.flavours.get_widget_renderable_mapping">get_widget_renderable_mapping</a></code></li>
 </ul>
 </li>
@@ -523,7 +392,7 @@ Returns:</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>
