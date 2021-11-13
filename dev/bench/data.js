@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1636387159722,
+  "lastUpdate": 1636786657137,
   "repoUrl": "https://github.com/sujitahirrao/pandas-profiling",
   "entries": {
     "Pandas Profiling Benchmarks": [
@@ -520,6 +520,58 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.21584021816484686",
             "extra": "mean: 14.996416319399987 sec\nrounds: 10"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sujitahirrao3@gmail.com",
+            "name": "Sujit Ahirrao",
+            "username": "sujitahirrao"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94536d2f68aa1e18efc3c7f3fd6aa3eb74fa268a",
+          "message": "Merge pull request #18 from sujitahirrao/dependabot/pip/coverage-approx-eq-6.1\n\nbuild(deps): update coverage requirement from ~=6.0 to ~=6.1",
+          "timestamp": "2021-11-13T12:09:56+05:30",
+          "tree_id": "17c4bee5cc465180a9720d80d8918fabd1c8b008",
+          "url": "https://github.com/sujitahirrao/pandas-profiling/commit/94536d2f68aa1e18efc3c7f3fd6aa3eb74fa268a"
+        },
+        "date": 1636786650956,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/benchmarks/bench.py::test_titanic_explorative",
+            "value": 0.08896903701045518,
+            "unit": "iter/sec",
+            "range": "stddev: 0.14225436046917211",
+            "extra": "mean: 11.239865391399992 sec\nrounds: 10"
+          },
+          {
+            "name": "tests/benchmarks/bench.py::test_titanic_default",
+            "value": 0.08947292848699537,
+            "unit": "iter/sec",
+            "range": "stddev: 0.16465591439153968",
+            "extra": "mean: 11.176564989099996 sec\nrounds: 10"
+          },
+          {
+            "name": "tests/benchmarks/bench.py::test_titanic_minimal",
+            "value": 0.39275076924570557,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0793697031030009",
+            "extra": "mean: 2.5461439627999765 sec\nrounds: 10"
+          },
+          {
+            "name": "tests/benchmarks/bench.py::test_rdw_minimal",
+            "value": 0.06161032869591192,
+            "unit": "iter/sec",
+            "range": "stddev: 0.17173422574628172",
+            "extra": "mean: 16.231044715500012 sec\nrounds: 10"
           }
         ]
       }
